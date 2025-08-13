@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>AI-PMO 架构图</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #fafafa;
+            padding: 20px;
+        }
+        .mermaid {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h2>AI-PMO 架构图（双中枢 + 数据智能引擎）</h2>
+    <div class="mermaid">
+flowchart LR
+    classDef input fill:#f9ebea,stroke:#333,stroke-width:1px;
+    classDef output fill:#f9ebea,stroke:#333,stroke-width:1px;
+    classDef ai fill:#d5f5e3,stroke:#333,stroke-width:1px;
+    classDef aiSub fill:#edf7ff,stroke:#333,stroke-width:1px;
+    classDef exp fill:#fff2cc,stroke:#333,stroke-width:1px;
+    classDef exec fill:#cce5ff,stroke:#333,stroke-width:1px;
+    classDef execSub fill:#e6f0ff,stroke:#333,stroke-width:1px;
+    classDef human fill:#f3efe8,stroke:#333,stroke-width:1px;
+    classDef note fill:#fff7cc,stroke:#e6b800,stroke-width:1px;
+
+    IN["外部与内部数据输入<br/>(行业知识、项目历史数据、实时信号)"]:::input
+    OUT["项目成果与知识资产<br/>(交付物、指标、经验沉淀)"]:::output
+
+    subgraph AI_Main["AI 主导"]
+        DIL["数据智能引擎<br/>- 数据采集<br/>- 可视化分析<br/>- 风险预测<br/>- 优化建议"]:::ai
+        AI_CASE["案例检索与匹配<br/>(RAG/CBR 最佳实践推荐)"]:::aiSub
+        AI_RISK["风险预测与关键路径分析<br/>(动态风险指数、时间/成本预测)"]:::aiSub
+    end
+
+    subgraph AI_Human_Collaboration["AI × 人协同"]
+        subgraph Experience_Hub["经验整合中心"]
+            K_EXP["经验输入<br/>- 外部行业标准与最佳实践<br/>- 跨领域案例<br/>- 企业内部项目日志"]:::exp
+            K_RET["项目复盘<br/>- KPI 与风险复盘<br/>- 改进措施提炼<br/>- SOP 更新"]:::exp
+            K_COACH["项目管理陪练<br/>- 场景化提示<br/>- What-if 模拟<br/>- 案例式指导"]:::exp
+        end
+
+        subgraph Execution_Hub["方案执行中心"]
+            EX_RES["资源调度<br/>- 跨团队/部门资源分配<br/>- 瓶颈检测<br/>- 冲突解决"]:::execSub
+            EX_TASK["任务跟踪<br/>- 多人协同看板<br/>- 依赖关系追踪<br/>- 进度预测"]:::execSub
+            EX_RISK["风险评估<br/>- 动态风险指数<br/>- 关键路径监控<br/>- 应对方案"]:::execSub
+            EX_PERF["绩效数据沉淀<br/>- KPI 数据记录<br/>- 完成度指标<br/>- 反馈到知识库"]:::execSub
+        end
+    end
+
+    subgraph Human_Main["人主导"]
+        H_STRAT["战略对齐<br/>(目标设定与优先级排序)"]:::human
+        H_APPROVE["关键审批<br/>(资源分配与变更批准)"]:::human
+        H_DECIDE["重大风险决策<br/>(高影响事件的处置与裁定)"]:::human
+        H_SOP["SOP 确认与落地<br/>(复盘成果确认与制度化)"]:::human
+    end
+
+    IN --> K_EXP
+    IN --> EX_TASK
+
+    K_COACH --> EX_RES
+    K_RET -.-> K_COACH
+    K_EXP -.-> DIL
+    EX_TASK -.-> DIL
+    AI_CASE --> K_EXP
+    AI_RISK --> EX_RISK
+
+    H_STRAT --> K_EXP
+    H_APPROVE --> EX_RES
+    H_DECIDE --> EX_RISK
+    H_SOP --> K_RET
+
+    EX_PERF --> OUT
+    K_RET -.-> OUT
+
+    note1["OODA 循环 + IDO 原则<br/>Observe（观察） → Orient（定位） → Decide（决策） → Act（行动）<br/>个人驱动（Individual） • 创新（Innovation） • 组织（Organization）"]:::note
+    </div>
+</body>
+</html>
